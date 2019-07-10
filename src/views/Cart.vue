@@ -1,9 +1,20 @@
 <template>
-  <div class="cart">
-  <ul>
-      <li v-for='(item,index) in lists' :key='index'>{{item.productName}}</li>
-  </ul>
-  </div>
+<div class="cart">  
+    <div class="title">
+    <el-divider content-position="center"><span style="font-size:22px;">购物车</span></el-divider>
+    </div>
+    <div class="content">
+     <div class="project">
+
+     </div>
+     <div>
+        <ul>
+        <li></li>
+        </ul>
+     </div>
+     
+    </div>
+</div>
 </template>
 
 <script>
@@ -20,12 +31,23 @@ export default {
   created () {
       this.dataView();
   },
-  methods:{
-      dataView: function (dataJson) {
-          debugger;
-      this.lists = dataJson.result.list;//就这句话错
+  methods: {
+      dataView: function () {
+      let data = dataJson;
+      this.lists = data.result.list;
       }
   }
-  
 }
-</script>
+</script> 
+<style lang="sass">
+.cart{
+    content{
+        project{
+            width:100px;
+            height:60px;
+            boder:1px black solid
+        }
+     
+    }
+}
+</style>
