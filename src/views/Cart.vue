@@ -17,9 +17,9 @@
      </div>
      <div>
         <ul style="padding-inline-start:0px;">
-            <div v-for="(item,index) in lists" :key="index" style="border:1px solid #A9A9A9;height:100px;">
+            <div v-for="(item,index) in lists" :key="index" style="border:1px solid #A9A9A9;height:70px;">
                 <dl>
-                    <dd :style="btn" ><input type="checkbox" v-bind:class="{'check':item.checked}" @click="choose(item)"/></dd>
+                    <dd :style="btn" ><input type="checkbox" v-model="item.check" @click="choose(item)"/></dd>
                     <dd :style="image"><img :src="item.productImage"></dd>
                     <dd :style="proame">{{item.productName}}</dd>
                     <dd :style="give" v-for="(part,index) in item.parts" :key="index">赠送：{{part.partsName}}</dd>
@@ -32,16 +32,17 @@
                         </span>
                     </dd>
                     <dd :style="priceAdd">{{item.productPrice * item.productQuantity | formatMoney}}</dd>
-                    <dd :style="del"><i class="el-icon-delete"></i></dd>
+                    <dd :style="del" ><i class="el-icon-delete" @click="show"></i></dd>
                 </dl>
             </div>
         </ul>
      </div>
     </div>
      <div style="text-align:left;margin:30px 20px 0px 20px;">
-         <input type="checkbox"/>
-         <span style="margin:20px 10px 0 10px;color:#D2691E;" :class="{'check':checkAllFlag}" @click="checkAll(item)">全选</span><span style="margin-right:66%;">取消全选</span>
-         <span>总额：</span>
+         <input type="checkbox" :class="{'check':checkAllFlag}" @click="checkAll(true)"/>
+         <span style="margin:20px 10px 0 10px;color:#D2691E;">全选</span>
+         <span style="margin-right:66%;" @click="checkAll(false)">取消全选</span>
+         <span>总额：{{totalMoney | formatMoney}}</span>
          <div :style="money">付款</div>
      <!--<table style="width:100%;vertical-align:center;">
        <tr>
@@ -52,20 +53,29 @@
        <td style="width:17%;height:10%;background-color:red;">结账</td> 
        </tr> -->
     </div>
+    <div>
+        <Delete v-show="showAlert" @hidden="hiddenShow"></Delete>
+    </div>
 </div>
 </template>
 
 <script>
 // @ is an alias to /src
 import dataJson from './cart.json'
+import Delete from '../components/Delete.vue'
 
 export default {
   name: 'cart',
+  components:{
+      Delete
+  },
   data () {
       return{
            lists: [],
            part: [],
-           checkAllFlag:'false',
+           checkAllFlag: false,
+           showAlert: false,
+           totalMoney: 0,
            content:{
             height: ''
            },
@@ -77,7 +87,7 @@ export default {
            },
            btn:{
                margin: '0 auto',
-               paddingTop: '25px',
+               paddingTop: '5px',
                float: 'left',
                marginLeft: '20px',
                width: '1%'
@@ -91,13 +101,13 @@ export default {
                float: 'left',
                textAlign: 'left',
                marginLeft: '10px',
-               width: '5%'
+               width: '7%'
            },
            give:{
                float: 'left',
                textAlign: 'left',
                marginLeft: '10px',
-               width: '33%'
+               width: '35%'
            },
            price:{
                float: 'left',
@@ -159,23 +169,42 @@ export default {
                   product.productQuantity = 1;
               }
           }
+          this.calcTotalMoney();
+      },
+      hiddenShow: function() {
+      this.showAlert = false;
       },
       choose: function(item) {
-           if(typeof item.checked == 'undefined'){
-               this.$set(item,"checked",true)
+           if(typeof item.check == 'undefined'){
+               this.$set(item,"check",true)
            }else{
-               item.checked = !item.checked;
+               item.check = !item.check;
            }
+           this.calcTotalMoney();
        },
-       checkAll: function(item) {
-           this.checkAllFlag='true';
-           this.lists.forEach(function(item,index) {
-            if(typeof item.checked == 'undefined'){
-               this.$set(item,"checked",true)
+       checkAll: function(flag) {
+           this.checkAllFlag = flag;
+           var _this = this;
+           this.lists.forEach(function (item,index) {
+            if(typeof item.check == 'undefined'){
+               _this.$set(item,"check", _this.checkAllFlag)
            }else{
-               item.checked = true;
+               item.check = _this.checkAllFlag;
            }
            })
+           this.calcTotalMoney();
+       },
+       calcTotalMoney: function () {
+        var _this=this;
+        this.totalMoney = 0;
+        this.lists.forEach(function (item,index) {
+         if(item.check){
+           _this.totalMoney += item.productQuantity*item.productPrice;
+       }   
+        });
+       },
+       show: function () {
+           this.showAlert = true;
        }
   }
 }
