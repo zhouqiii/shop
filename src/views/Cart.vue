@@ -42,7 +42,7 @@
          <input type="checkbox" :class="{'check':checkAllFlag}" @click="checkAll(true)"/>
          <span style="margin:20px 10px 0 10px;color:#D2691E;">全选</span>
          <span style="margin-right:66%;" @click="checkAll(false)">取消全选</span>
-         <span>总额：{{totalMoney | formatMoney}}</span>
+         总额：<span style="color:#B22222;">{{totalMoney | formatMoney}}</span>
          <div :style="money">付款</div>
      <!--<table style="width:100%;vertical-align:center;">
        <tr>
@@ -54,7 +54,7 @@
        </tr> -->
     </div>
     <div>
-        <Delete v-show="showAlert" @hidden="hiddenShow"></Delete>
+        <Delete v-show="showAlert" @hidden="hiddenShow" @delete="deleteData(index)" ></Delete>
     </div>
 </div>
 </template>
@@ -73,6 +73,7 @@ export default {
       return{
            lists: [],
            part: [],
+           list: [],
            checkAllFlag: false,
            showAlert: false,
            totalMoney: 0,
@@ -135,7 +136,7 @@ export default {
                float: 'right',
                height: '40px',
                width: '15%',
-               backgroundColor: '	#B22222',
+               backgroundColor: '#B22222',
                paddingTop: '10px',
                textAlign: 'center',
                color: '#fff',
@@ -205,6 +206,10 @@ export default {
        },
        show: function () {
            this.showAlert = true;
+       },
+       deleteData: function (index) {
+           this.lists.splice(index,1);
+           this.showAlert = false;
        }
   }
 }

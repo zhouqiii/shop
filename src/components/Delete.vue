@@ -1,7 +1,7 @@
 <template>
   <div class="delete" :style="del">
     <p style="text-align:center;margin-top:35px;">确定删除吗？</p>
-    <input type="button" style="background-color:#B22222;height:18%;width:20%;;color:#fff;margin-top:20px" value="Yes" @click="sure"/>
+    <input type="button" style="background-color:#B22222;height:18%;width:20%;;color:#fff;margin-top:20px" value="Yes" @click="sure()"/>
     <input type="button" style="background-color:#B22222;height:18%;width:20%;;color:#fff;margin-left:40px;margin-top:20px" value="No" @click="cancel" />
   </div>
 </template>
@@ -24,7 +24,7 @@ export default {
        this.$emit('hidden')
     },
     sure: function () {
-      
+     this.$emit('delete')
     }
   }
   
