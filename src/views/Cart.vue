@@ -1,7 +1,7 @@
 <template>
 <div class="cart">  
     <div id="title" style="margin-left:20px;margin-right:20px;">
-    <el-divider content-position="center"><span style="font-size:18px;">购物车</span></el-divider>
+    <el-divider content-position="center"><span style="font-size:18px;font-weight:bold;color:SlateGray;">购物车</span></el-divider>
     </div>
     <div :class="content" style="margin:10px 20px 0 20px;">
      <div v-bind:style="project">
@@ -43,7 +43,7 @@
          <span style="margin:20px 10px 0 10px;color:#D2691E;">全选</span>
          <span style="margin-right:66%;" @click="checkAll(false)">取消全选</span>
          总额：<span style="color:#B22222;">{{totalMoney | formatMoney}}</span>
-         <div :style="money">付款</div>
+         <div :style="money" @click="jump">付款</div>
      <!--<table style="width:100%;vertical-align:center;">
        <tr>
        <td><input type="checkbox"/></td>
@@ -135,7 +135,7 @@ export default {
            money: {
                float: 'right',
                height: '40px',
-               width: '15%',
+               width: '13%',
                backgroundColor: '#B22222',
                paddingTop: '10px',
                textAlign: 'center',
@@ -210,6 +210,9 @@ export default {
        deleteData: function (index) {
            this.lists.splice(index,1);
            this.showAlert = false;
+       },
+       jump: function () {
+           this.$router.push('/adress')
        }
   }
 }
